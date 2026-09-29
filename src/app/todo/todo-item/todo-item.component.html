@@ -1,0 +1,10 @@
+<li>
+  <input
+    type="checkbox"
+    [checked]="todo().status"
+    (change)="onToggle()" />
+
+  <span [class.done]="todo().status">{{ todo().title }}</span>
+
+  <button (click)="onRemove()">Delete</button>
+</li>

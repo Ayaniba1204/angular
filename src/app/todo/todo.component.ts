@@ -1,10 +1,11 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Todo,TodoFilter } from './models/todo.model';
-
+import { TodoItemComponent } from './todo-item/todo-item.component';
+  
 @Component({
   selector: 'app-todo',
-  imports: [FormsModule],
+  imports: [FormsModule, TodoItemComponent],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.css'
 })

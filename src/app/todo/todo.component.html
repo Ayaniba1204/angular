@@ -2,29 +2,29 @@
   <h2>My Todos</h2>
 
   <div class="row">
-  <input
-    type="text"
-    placeholder="Search"
-    [(ngModel)]="searchText" />
- 
-  <select [(ngModel)]="filterSelection">
-    <option value="all">All</option>
-    <option value="completed">Completed</option>
-    <option value="incomplete">Incomplete</option>
-  </select>
+    <input
+      type="text"
+      placeholder="Search"
+      [(ngModel)]="searchText" />
+  
+    <select [(ngModel)]="filterSelection">
+      <option value="all">All</option>
+      <option value="completed">Completed</option>
+      <option value="incomplete">Incomplete</option>
+    </select>
 
-    <button (click)="addTodo()">Add</button>
   </div>
 
   <ul>
     @for (todo of filteredTodos(); track todo.id) {
-      <li>
-        <input type="checkbox" [checked]="todo.status" (change)="toggleTodo(todo.id)" />
-        <span [class.done]="todo.status">{{ todo.title }}</span>
-        <button (click)="deleteTodo(todo.id)">Delete</button>
-      </li>
+
+      <app-todo-item
+        [todo]="todo"
+        (toggle)="toggleTodo($event)"
+        (remove)="deleteTodo($event)" />
+
     } @empty {
-      <li class="muted">No todos yet.</li>
+      <li class="muted">Nothing matches.</li>
     }
   </ul>
   <p class="muted">
