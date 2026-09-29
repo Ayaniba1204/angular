@@ -1,35 +1,38 @@
 <div class="card">
   <h2>My Todos</h2>
 
+  <p class="muted">
+    Total {{ todoService.totalCount() }} ·
+    Done {{ todoService.completedCount() }} ·
+    Pending {{ todoService.incompleteCount() }}
+  </p>
+
   <div class="row">
-    <input
-      type="text"
-      placeholder="Search"
-      [(ngModel)]="searchText" />
-  
-    <select [(ngModel)]="filterSelection">
+    <input type="text" placeholder="What needs doing?"
+           [(ngModel)]="newTodoTitle"
+           (keyup.enter)="addTodo()" />
+    <button (click)="addTodo()">Add</button>
+  </div>
+
+  <div class="row">
+    <input type="text" placeholder="Search"
+           [(ngModel)]="todoService.searchText" />
+
+    <select [(ngModel)]="todoService.filterSelection">
       <option value="all">All</option>
       <option value="completed">Completed</option>
       <option value="incomplete">Incomplete</option>
     </select>
-
   </div>
 
   <ul>
-    @for (todo of filteredTodos(); track todo.id) {
-
+    @for (todo of todoService.filteredTodos(); track todo.id) {
       <app-todo-item
         [todo]="todo"
-        (toggle)="toggleTodo($event)"
-        (remove)="deleteTodo($event)" />
-
+        (toggle)="todoService.toggleTodo($event)"
+        (remove)="todoService.deleteTodo($event)" />
     } @empty {
       <li class="muted">Nothing matches.</li>
     }
   </ul>
-  <p class="muted">
-    Total {{ totalCount() }}.
-    Done {{ completedCount() }}.
-    Pending {{ incompleteCount() }}
-  </p>
 </div>
