@@ -1,5 +1,11 @@
 <h1>Todo App</h1>
 
-<app-todo/>
+<h1>Todo App</h1>
 
-<router-outlet/>
+<nav class="row">
+  <a routerLink="/todos" routerLinkActive="active">Todos</a>
+  <a routerLink="/about" routerLinkActive="active">About</a>
+  <a routerLink="/settings" routerLinkActive="active">Settings</a>
+</nav>
+
+<router-outlet />

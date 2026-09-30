@@ -5,6 +5,6 @@
     (change)="onToggle()" />
 
   <span [class.done]="todo().status">{{ todo().title }}</span>
-
+  <a [routerLink]="['/todos', todo().id]">View</a>
   <button (click)="onRemove()">Delete</button>
 </li>

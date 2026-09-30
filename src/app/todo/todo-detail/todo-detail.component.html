@@ -1,0 +1,18 @@
+<div class="card">
+
+  @if (loading()) {
+    <p class="muted">Loading</p>
+  } @else {
+
+    @if (todo(); as t) {
+      <h2>{{ t.title }}</h2>
+      <p class="muted">ID: {{ t.id }}</p>
+      <p>Status: {{ t.status ? 'Done' : 'Pending' }}</p>
+    } @else {
+      <p class="error">No todo with id {{ id() }}.</p>
+    }
+
+  }
+
+  <a routerLink="/todos">Back to the list</a>
+</div>
