@@ -1,0 +1,34 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <div class="row">
+    <input
+      type="text"
+      formControlName="title"
+      placeholder="What needs doing?" />
+
+    <select formControlName="priority">
+      <option value="low">Low</option>
+      <option value="normal">Normal</option>
+      <option value="high">High</option>
+    </select>
+
+    <button type="submit" [disabled]="form.invalid">Add</button>
+  </div>
+
+  @if (title.touched && title.invalid) {
+    <p class="error">
+      @if (title.hasError('required')) {
+        A title is required.
+      }
+      @if (title.hasError('minlength')) {
+        At least
+        {{ title.getError('minlength').requiredLength }}
+        characters, please.
+      }
+      @if (title.hasError('whitespace')) {
+        A title cannot be only spaces.
+      }
+    </p>
+  }
+
+</form>

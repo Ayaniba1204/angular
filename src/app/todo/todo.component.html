@@ -7,18 +7,13 @@
     Pending {{ todoService.incompleteCount() }}
   </p>
 
-  <div class="row">
-    <input type="text" placeholder="What needs doing?"
-           [(ngModel)]="newTodoTitle"
-           (keyup.enter)="addTodo()" />
-    <button (click)="addTodo()">Add</button>
-  </div>
+  <app-todo-form (submitTodo)="onSubmitTodo($event)" />
 
   <div class="row">
-    <input type="text" placeholder="Search"
-           [(ngModel)]="todoService.searchText" />
+    <input type="text" [formControl]="searchControl" placeholder="Search" />
 
-    <select [(ngModel)]="todoService.filterSelection">
+    <select [value]="todoService.filterSelection()"
+      (change)="todoService.filterSelection.set($any($event.target).value)">
       <option value="all">All</option>
       <option value="completed">Completed</option>
       <option value="incomplete">Incomplete</option>
@@ -26,22 +21,21 @@
   </div>
 
   @if (todoService.loading()) {
-    <p class="muted">Loading</p>
+  <p class="muted">Loading...</p>
   }
+
   @if (todoService.error()) {
-    <p class="error">{{ todoService.error() }}
+  <p class="error">
+    {{ todoService.error() }}
     <button (click)="todoService.loadTodos()">Try again</button>
-    </p>
+  </p>
   }
 
   <ul>
     @for (todo of todoService.filteredTodos(); track todo.id) {
-      <app-todo-item
-        [todo]="todo"
-        (toggle)="todoService.toggleTodo($event)"
-        (remove)="todoService.deleteTodo($event)" />
+    <app-todo-item [todo]="todo" (toggle)="todoService.toggleTodo($event)" (remove)="todoService.deleteTodo($event)" />
     } @empty {
-      <li class="muted">Nothing matches.</li>
+    <li class="muted">Nothing matches.</li>
     }
   </ul>
 </div>
