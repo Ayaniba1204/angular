@@ -1,6 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Todo, TodoFilter } from './models/todo.model';
 import { TodoApiService } from './todo-api.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class TodoService {
@@ -56,7 +57,10 @@ export class TodoService {
 
     this.api.create(clean).subscribe({
       next: (created) => this._todos.update(list => [...list, created]),
-      error: () => this.error.set('Could not add the todo.')
+      error: (err: HttpErrorResponse) => {
+        const serverMessage = err.error?.title;
+        this.error.set(serverMessage ?? 'Could not add the todo.');
+      }
     });
   }
 
