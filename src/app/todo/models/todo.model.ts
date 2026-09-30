@@ -1,7 +1,3 @@
-export interface Todo {
-  id: number;
-  title: string;
-  status: boolean;
-}
+export type { Todo } from '../../api';
 
 export type TodoFilter = 'all' | 'completed' | 'incomplete';

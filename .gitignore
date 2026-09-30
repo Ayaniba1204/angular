@@ -6,6 +6,12 @@
 /out-tsc
 /bazel-out
 
+.angular
+ 
+# generated API client - rebuilt by "npm run api:sync", never edited by hand
+/src/app/api/
+/openapi.json
+
 # Node
 /node_modules
 npm-debug.log

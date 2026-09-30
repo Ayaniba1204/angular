@@ -1,32 +1,29 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { Todo } from './models/todo.model';
+import { Todo, TodosService } from '../api';
 
 @Injectable({ providedIn: 'root' })
 export class TodoApiService {
 
-  private http = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/todos`;
+  private generated = inject(TodosService);
 
   getAll(): Observable<Todo[]> {
-    return this.http.get<Todo[]>(this.baseUrl);
+    return this.generated.getAllTodos();
   }
 
   getById(id: number): Observable<Todo> {
-    return this.http.get<Todo>(`${this.baseUrl}/${id}`);
+    return this.generated.getTodoById(id);
   }
 
   create(title: string): Observable<Todo> {
-    return this.http.post<Todo>(this.baseUrl, { title, status: false });
+    return this.generated.createTodo({ title, status: false });
   }
 
   update(id: number, changes: Partial<Todo>): Observable<Todo> {
-    return this.http.put<Todo>(`${this.baseUrl}/${id}`, changes);
+    return this.generated.updateTodo(id, changes as Todo);
   }
 
-  remove(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  remove(id: number): Observable<unknown> {
+    return this.generated.deleteTodo(id);
   }
 }

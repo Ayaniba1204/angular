@@ -13,10 +13,19 @@ export class TodoItemComponent {
   toggle=output<number>();
   remove=output<number>();
 
-  onToggle(){
-    this.toggle.emit(this.todo().id);
+  onToggle() {
+    const id = this.todo().id;
+    if (id == null) {
+      return;
+    }
+    this.toggle.emit(id);
   }
-  onRemove(){
-    this.remove.emit(this.todo().id);
+
+  onRemove() {
+    const id = this.todo().id;
+    if (id == null) {
+      return;
+    }
+    this.remove.emit(id);
   }
 }
