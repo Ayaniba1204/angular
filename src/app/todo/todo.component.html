@@ -25,6 +25,15 @@
     </select>
   </div>
 
+  @if (todoService.loading()) {
+    <p class="muted">Loading</p>
+  }
+  @if (todoService.error()) {
+    <p class="error">{{ todoService.error() }}
+    <button (click)="todoService.loadTodos()">Try again</button>
+    </p>
+  }
+
   <ul>
     @for (todo of todoService.filteredTodos(); track todo.id) {
       <app-todo-item

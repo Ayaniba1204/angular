@@ -1,17 +1,17 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { Todo, TodoFilter } from './models/todo.model';
+import { TodoApiService } from './todo-api.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TodoService {
 
-  private readonly _todos = signal<Todo[]>([
-    { id: 1, title: 'Learn Angular', status: false },
-    { id: 2, title: 'Build Todo App', status: true }
-  ]);
+  private api = inject(TodoApiService);
 
+  private readonly _todos = signal<Todo[]>([]);
   readonly todos = this._todos.asReadonly();
+
+  readonly loading = signal(false);
+  readonly error   = signal<string | null>(null);
 
   readonly searchText      = signal('');
   readonly filterSelection = signal<TodoFilter>('all');
@@ -34,25 +34,48 @@ export class TodoService {
     });
   });
 
+  loadTodos() {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.api.getAll().subscribe({
+      next: (todos) => {
+        this._todos.set(todos);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Could not load todos.');
+        this.loading.set(false);
+      }
+    });
+  }
+
   addTodo(title: string) {
     const clean = title.trim();
-    if (clean === '') {
-      return;
-    }
+    if (clean === '') return;
 
-    const newTodo: Todo = { id: Date.now(), title: clean, status: false };
-    this._todos.update(list => [...list, newTodo]);
+    this.api.create(clean).subscribe({
+      next: (created) => this._todos.update(list => [...list, created]),
+      error: () => this.error.set('Could not add the todo.')
+    });
   }
 
   toggleTodo(id: number) {
-    this._todos.update(list =>
-      list.map(todo =>
-        todo.id === id ? { ...todo, status: !todo.status } : todo
-      )
-    );
+    const todo = this._todos().find(t => t.id === id);
+    if (!todo) return;
+
+    this.api.update(id, { status: !todo.status }).subscribe({
+      next: (updated) => this._todos.update(list =>
+        list.map(t => t.id === id ? updated : t)
+      ),
+      error: () => this.error.set('Could not update the todo.')
+    });
   }
 
   deleteTodo(id: number) {
-    this._todos.update(list => list.filter(todo => todo.id !== id));
+    this.api.remove(id).subscribe({
+      next: () => this._todos.update(list => list.filter(t => t.id !== id)),
+      error: () => this.error.set('Could not delete the todo.')
+    });
   }
 }

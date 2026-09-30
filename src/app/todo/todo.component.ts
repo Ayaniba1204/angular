@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component,OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TodoItemComponent } from './todo-item/todo-item.component';
 import { TodoService } from './todo.service';
@@ -9,7 +9,10 @@ import { TodoService } from './todo.service';
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.css'
 })
-export class TodoComponent {
+export class TodoComponent implements OnInit {
+  ngOnInit(): void {
+    this.todoService.loadTodos();
+  }
   protected readonly todoService = inject(TodoService);
 
   newTodoTitle = signal('');
